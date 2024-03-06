@@ -1,4 +1,5 @@
 import * as CG from './transforms.js';
+import { Matrix } from "./matrix.js";
 
 class Renderer {
     // canvas:              object ({id: __, width: __, height: __})
@@ -86,6 +87,18 @@ class Renderer {
     //
     updateTransforms(time, delta_time) {
         // TODO: update any transformations needed for animation
+        let vX = 50;
+        let vY = 10;
+        
+        let xDisplacement = vX * time/1000;
+        let yDisplacement = vY * time/1000;
+
+        if (xDisplacement > this.canvas.width) {
+            xDisplacement = -1*xDisplacement;
+        }
+
+        this.models.slide0[0].transform = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement, yDisplacement);
+
     }
     
     //
@@ -116,7 +129,12 @@ class Renderer {
         // Following lines are example of drawing a single polygon
         // (this should be removed/edited after you implement the slide)
         let teal = [0, 128, 128, 255];
-        this.drawConvexPolygon(this.models.slide0[0].vertices, teal);
+        let vertices = [];
+        for (let i=0; i < this.models.slide0[0].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide0[0].transform, this.models.slide0[0].vertices[i]]);
+            vertices.push(vertex);
+        }
+        this.drawConvexPolygon(vertices, teal);
     }
 
     //
