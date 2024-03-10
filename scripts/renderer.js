@@ -47,6 +47,15 @@ class Renderer {
                         CG.Vector3(-50, -50, 1)
                     ],
                     transform: null
+                },
+                {
+                    vertices: [
+                        CG.Vector3(-50, 50, 1),
+                        CG.Vector3(50, 50, 1),
+                        CG.Vector3(50, -50, 1),
+                        CG.Vector3(-50, -50, 1)
+                    ],
+                    transform: null
                 }
             ],
             slide2: [],
@@ -128,20 +137,29 @@ class Renderer {
         let theta2 = -omega2 * time / 1000;
         let xDisplacement2 = 500;
         let yDisplacement2 = 200;
+
+        let omega3 = Math.PI / 3;
+        let theta3 = omega3 * time / 1000;
+        let xDisplacement3 = 600;
+        let yDisplacement3 = 400;
         
         let centerX = (this.models.slide1[0].vertices[0].values[0][0] + this.models.slide1[0].vertices[1].values[0][0]) / 2;
         let centerY = (this.models.slide1[0].vertices[0].values[1][0] + this.models.slide1[0].vertices[2].values[1][0]) / 2;
         
         let translationMatrix = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement1, yDisplacement1);
         let translationMatrix2 = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement2, yDisplacement2);
+        let translationMatrix3 = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement3, yDisplacement3);
 
         let rotationMatrix = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
         rotationMatrix = Matrix.multiply([rotationMatrix, CG.mat3x3Rotate(new Matrix(3, 3), theta), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
         let rotationMatrix2 = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
         rotationMatrix2 = Matrix.multiply([rotationMatrix, CG.mat3x3Rotate(new Matrix(3, 3), theta2), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
+        let rotationMatrix3 = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
+        rotationMatrix3 = Matrix.multiply([rotationMatrix, CG.mat3x3Rotate(new Matrix(3, 3), theta3), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
 
         this.models.slide1[0].transform = Matrix.multiply([translationMatrix, rotationMatrix]);
         this.models.slide1[1].transform = Matrix.multiply([translationMatrix2, rotationMatrix2]);
+        this.models.slide1[2].transform = Matrix.multiply([translationMatrix3, rotationMatrix3]);
 
         // Slide 2
 
@@ -203,6 +221,14 @@ class Renderer {
             vertices2.push(vertex);
         }
         this.drawConvexPolygon(vertices2, red);
+
+        let blue = [0, 0, 255, 255];
+        let vertices3 = [];
+        for (let i=0; i < this.models.slide1[2].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide1[2].transform, this.models.slide1[2].vertices[i]]);
+            vertices3.push(vertex);
+        }
+        this.drawConvexPolygon(vertices3, blue);
         
     }
 
