@@ -84,7 +84,46 @@ class Renderer {
                     transform: null
                 }
             ],
-            slide3: []
+            slide3: [
+                {
+                vertices: [
+
+                ],
+                xDisplacement: null,
+                yDisplacement: null,
+                vX: .2,
+                vY: -.07,
+                transform: null
+            },
+            {
+                vertices: [
+                    CG.Vector3(-50, 50, 1),
+                    CG.Vector3(50, 50, 1),
+                    CG.Vector3(50, -50, 1),
+                    CG.Vector3(-50, -50, 1)
+                ],
+                transform: null
+            },
+            {
+                vertices: [
+                    CG.Vector3(50, 150, 1),
+                    CG.Vector3(150, 150, 1),
+                    CG.Vector3(150, 50, 1),
+                    CG.Vector3(50, 50, 1)
+                ],
+                transform: null
+            },
+            {
+                vertices: [
+                    CG.Vector3(-50, 50, 1),
+                    CG.Vector3(50, 50, 1),
+                    CG.Vector3(50, -50, 1),
+                    CG.Vector3(-50, -50, 1)
+                ],
+                transform: null
+            }
+            
+            ]
         };
         const centerX = 400; // X-coordinate of the center
         const centerY = 300; // Y-coordinate of the center
@@ -96,6 +135,13 @@ class Renderer {
             const x = centerX + Math.cos(angle) * radius; // Calculate X-coordinate using cosine
             const y = centerY + Math.sin(angle) * radius; // Calculate Y-coordinate using sine
             this.models.slide0[0].vertices.push(CG.Vector3(x, y, 1)); // Add vertex to the array
+        }
+
+        for (let i = 0; i < numVertices; i++) {
+            const angle = (i / numVertices) * Math.PI * 2; // Calculate angle
+            const x = centerX + Math.cos(angle) * radius; // Calculate X-coordinate using cosine
+            const y = centerY + Math.sin(angle) * radius; // Calculate Y-coordinate using sine
+            this.models.slide3[0].vertices.push(CG.Vector3(x, y, 1)); // Add vertex to the array
         }
     }
 
@@ -111,6 +157,18 @@ class Renderer {
 
     // idx: int
     setSlideIndex(idx) {
+        if (idx === 0) {
+            // Reset the ball's position to its original position on Slide 0
+            this.models.slide0[0].xDisplacement = null;
+            this.models.slide0[0].yDisplacement = null;
+            this.models.slide0[0].transform = null;
+        }
+        if (idx === 3) {
+            // Reset the ball's position to its original position on Slide 0
+            this.models.slide3[0].xDisplacement = null;
+            this.models.slide3[0].yDisplacement = null;
+            this.models.slide3[0].transform = null;
+        }
         this.slide_idx = idx;
     }
 
@@ -221,6 +279,64 @@ class Renderer {
         slide2_scale2 = Matrix.multiply([slide2_scale2, CG.mat3x3Scale(new Matrix(3, 3), sizeX, sizeY), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
 
         this.models.slide2[1].transform = Matrix.multiply([slide2_translate2, slide2_scale2]);
+
+        // Slide 3
+
+        this.models.slide3[0].xDisplacement = this.models.slide3[0].xDisplacement + this.models.slide3[0].vX * delta_time;
+        this.models.slide3[0].yDisplacement = this.models.slide3[0].yDisplacement + this.models.slide3[0].vY * delta_time;
+
+        
+        this.models.slide3[0].transform = CG.mat3x3Translate(new Matrix(3, 3), this.models.slide3[0].xDisplacement, this.models.slide3[0].yDisplacement);
+
+        // Slide rotate
+        let omega4 = Math.PI / 4;
+        let theta4 = omega4 * time / 1000;
+        let xDisplacement4 = 200;
+        let yDisplacement4 = 200;
+        
+        let centerX4 = (this.models.slide3[1].vertices[0].values[0][0] + this.models.slide3[1].vertices[1].values[0][0]) / 2;
+        let centerY4 = (this.models.slide3[1].vertices[0].values[1][0] + this.models.slide3[1].vertices[2].values[1][0]) / 2;
+        
+        let translationMatrix4 = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement4, yDisplacement4);
+
+        let rotationMatrix4 = CG.mat3x3Translate(new Matrix(3, 3), -centerX4, -centerY4);
+        rotationMatrix4 = Matrix.multiply([rotationMatrix4, CG.mat3x3Rotate(new Matrix(3, 3), theta4), CG.mat3x3Translate(new Matrix(3, 3), centerX4, centerY4)]);
+
+        this.models.slide3[1].transform = Matrix.multiply([translationMatrix4, rotationMatrix4]);
+        
+        //
+        let omega5 = Math.PI / 4;
+        let theta5 = omega5 * time / 1000;
+        let xDisplacement5 = 450;
+        let yDisplacement5 = 450;
+        
+        let centerX5 = (this.models.slide3[2].vertices[0].values[0][0] + this.models.slide3[2].vertices[1].values[0][0]) / 2;
+        let centerY5 = (this.models.slide3[2].vertices[0].values[1][0] + this.models.slide3[2].vertices[2].values[1][0]) / 2;
+        
+        let translationMatrix5 = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement5, yDisplacement5);
+
+        let rotationMatrix5 = CG.mat3x3Translate(new Matrix(3, 3), -centerX5, -centerY5);
+        rotationMatrix5 = Matrix.multiply([rotationMatrix5, CG.mat3x3Rotate(new Matrix(3, 3), theta5), CG.mat3x3Translate(new Matrix(3, 3), centerX5, centerY5)]);
+
+        this.models.slide3[2].transform = Matrix.multiply([translationMatrix5, rotationMatrix5]);
+        //
+        let maxSize1 = 30;
+        let minSize1 = 10;
+        let scaleFactor1 = Math.sin(time / 1000);
+        let size1 = (maxSize1 - minSize1) / 10 * scaleFactor1;
+
+        let slide3_xDisplacement = 500;
+        let slide3_yDisplacement = 500;
+
+        let slide3_translate = CG.mat3x3Translate(new Matrix(3, 3), slide3_xDisplacement, slide3_yDisplacement);
+        let slide3_scale = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
+        slide3_scale = Matrix.multiply([slide3_scale, CG.mat3x3Scale(new Matrix(3, 3), size1, size1), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
+
+        this.models.slide3[3].transform = Matrix.multiply([slide3_translate, slide3_scale]);
+
+
+
+
     }
     
     //
@@ -256,16 +372,7 @@ class Renderer {
             let vertex = Matrix.multiply([this.models.slide0[0].transform, this.models.slide0[0].vertices[i]]);
             vertices.push(vertex);
 
-            console.log(vertex.data[0]);
-            // if (vertex.data[0] > this.canvas.width) {
-            //     this.models.slide0[0].vX = -this.models.slide0[0].vX;
-            // } else if(vertex.data[1] > this.canvas.height) {
-            //     this.models.slide0[0].vY = -this.models.slide0[0].vY;
-            // } else if(vertex.data[0] < 0) {
-            //     this.models.slide0[0].vX = -this.models.slide0[0].vX;
-            // } else if(vertex.data[1] < 0) {
-            //     this.models.slide0[0].vY = -this.models.slide0[0].vY;
-            // }
+
             if (vertex.data[0] > this.canvas.width || vertex.data[0] < 0) {
                 this.models.slide0[0].vX = -this.models.slide0[0].vX;
             }
@@ -335,8 +442,61 @@ class Renderer {
         // TODO: get creative!
         //   - animation should involve all three basic transformation types
         //     (translation, scaling, and rotation)
-        
-        
+            // Drawing bouncing ball with additional transformations
+        let red = [255, 0, 0, 255];
+        let vertices = [];
+
+        // Apply transformations
+        for (let i = 0; i < this.models.slide3[0].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide3[0].transform, this.models.slide3[0].vertices[i]]);
+            vertices.push(vertex);
+            if (vertex.data[0] > this.canvas.width || vertex.data[0] < 0) {
+                this.models.slide3[0].vX = -this.models.slide3[0].vX;
+            }
+            if (vertex.data[1] > this.canvas.height || vertex.data[1] < 0) {
+                this.models.slide3[0].vY = -this.models.slide3[0].vY;
+            }
+        }
+
+        // Draw the transformed ball
+        this.drawConvexPolygon(vertices, red);
+
+
+        // Draw additional rotating polygon
+        let green = [0, 255, 0, 255];
+        let vertices2 = [];
+    
+        // Apply transformations to the second polygon
+        for (let i = 0; i < this.models.slide3[1].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide3[1].transform, this.models.slide3[1].vertices[i]]);
+            vertices2.push(vertex);
+        }
+    
+        // Draw the transformed polygon
+        this.drawConvexPolygon(vertices2, green);
+
+        // Draw additional rotating polygon
+        let vertices3 = [];
+    
+        // Apply transformations to the second polygon
+        for (let i = 0; i < this.models.slide3[2].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide3[2].transform, this.models.slide3[2].vertices[i]]);
+            vertices3.push(vertex);
+        }
+    
+        // Draw the transformed polygon
+        this.drawConvexPolygon(vertices3, green);
+        let blue = [0, 0, 255, 255];
+        let vertices4 = [];
+    
+        // Apply transformations to the second polygon
+        for (let i = 0; i < this.models.slide3[3].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide3[3].transform, this.models.slide3[3].vertices[i]]);
+            vertices4.push(vertex);
+        }
+    
+        // Draw the transformed polygon
+        this.drawConvexPolygon(vertices4, blue);
     }
     
     // vertex_list:  array of object [Matrix(3, 1), Matrix(3, 1), ..., Matrix(3, 1)]
