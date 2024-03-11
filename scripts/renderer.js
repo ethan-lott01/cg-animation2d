@@ -58,7 +58,17 @@ class Renderer {
                     transform: null
                 }
             ],
-            slide2: [],
+            slide2: [
+                {
+                    vertices: [
+                        CG.Vector3(-50, 50, 1),
+                        CG.Vector3(50, 50, 1),
+                        CG.Vector3(50, -50, 1),
+                        CG.Vector3(-50, -50, 1)
+                    ],
+                    transform: null
+                }
+            ],
             slide3: []
         };
     }
@@ -162,7 +172,19 @@ class Renderer {
         this.models.slide1[2].transform = Matrix.multiply([translationMatrix3, rotationMatrix3]);
 
         // Slide 2
+        let maxSize = 30;
+        let minSize = 10;
+        let scaleFactor = Math.sin(time / 1000);
+        let size = (maxSize - minSize) / 10 * scaleFactor;
 
+        let slide2_xDisplacement = 200;
+        let slide2_yDisplacement = 200;
+
+        let slide2_translate = CG.mat3x3Translate(new Matrix(3, 3), slide2_xDisplacement, slide2_yDisplacement);
+        let slide2_scale = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
+        slide2_scale = Matrix.multiply([slide2_scale, CG.mat3x3Scale(new Matrix(3, 3), size, size), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
+
+        this.models.slide2[0].transform = Matrix.multiply([slide2_translate, slide2_scale]);
     }
     
     //
@@ -237,6 +259,14 @@ class Renderer {
         // TODO: draw at least 2 polygons grow and shrink about their own centers
         //   - have each polygon grow / shrink different sizes
         //   - try at least 1 polygon that grows / shrinks non-uniformly in the x and y directions
+
+        let teal = [0, 128, 128, 255];
+        let vertices = [];
+        for (let i=0; i < this.models.slide2[0].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide2[0].transform, this.models.slide2[0].vertices[i]]);
+            vertices.push(vertex);
+        }
+        this.drawConvexPolygon(vertices, teal);
 
 
     }
