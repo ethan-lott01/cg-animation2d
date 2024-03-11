@@ -35,8 +35,55 @@ class Renderer {
                     transform: null
                 }
             ],
-            slide1: [],
-            slide2: [],
+            slide1: [
+                {
+                    vertices: [
+                        CG.Vector3(-50, 50, 1),
+                        CG.Vector3(50, 50, 1),
+                        CG.Vector3(50, -50, 1),
+                        CG.Vector3(-50, -50, 1)
+                    ],
+                    transform: null
+                },
+                {
+                    vertices: [
+                        CG.Vector3(-50, 50, 1),
+                        CG.Vector3(50, 50, 1),
+                        CG.Vector3(50, -50, 1),
+                        CG.Vector3(-50, -50, 1)
+                    ],
+                    transform: null
+                },
+                {
+                    vertices: [
+                        CG.Vector3(-50, 50, 1),
+                        CG.Vector3(50, 50, 1),
+                        CG.Vector3(50, -50, 1),
+                        CG.Vector3(-50, -50, 1)
+                    ],
+                    transform: null
+                }
+            ],
+            slide2: [
+                {
+                    vertices: [
+                        CG.Vector3(-50, 50, 1),
+                        CG.Vector3(50, 50, 1),
+                        CG.Vector3(50, -50, 1),
+                        CG.Vector3(-50, -50, 1)
+                    ],
+                    transform: null
+                },
+                {
+                    vertices: [
+                        CG.Vector3(-50, 50, 1),
+                        CG.Vector3(50, 50, 1),
+                        CG.Vector3(50, -50, 1),
+                        CG.Vector3(-50, -50, 1)
+                    ],
+                    transform: null
+                }
+            ],
             slide3: []
         };
         const centerX = 400; // X-coordinate of the center
@@ -110,6 +157,70 @@ class Renderer {
 
         this.models.slide0[0].transform = CG.mat3x3Translate(new Matrix(3, 3), this.models.slide0[0].xDisplacement, this.models.slide0[0].yDisplacement);
 
+        // Slide 1
+        let omega = Math.PI / 4;
+        let theta = omega * time / 1000;
+        let xDisplacement1 = 200;
+        let yDisplacement1 = 200;
+        
+        let omega2 = Math.PI / 1;
+        let theta2 = -omega2 * time / 1000;
+        let xDisplacement2 = 500;
+        let yDisplacement2 = 200;
+
+        let omega3 = Math.PI / 3;
+        let theta3 = omega3 * time / 1000;
+        let xDisplacement3 = 600;
+        let yDisplacement3 = 400;
+        
+        let centerX = (this.models.slide1[0].vertices[0].values[0][0] + this.models.slide1[0].vertices[1].values[0][0]) / 2;
+        let centerY = (this.models.slide1[0].vertices[0].values[1][0] + this.models.slide1[0].vertices[2].values[1][0]) / 2;
+        
+        let translationMatrix = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement1, yDisplacement1);
+        let translationMatrix2 = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement2, yDisplacement2);
+        let translationMatrix3 = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement3, yDisplacement3);
+
+        let rotationMatrix = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
+        rotationMatrix = Matrix.multiply([rotationMatrix, CG.mat3x3Rotate(new Matrix(3, 3), theta), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
+        let rotationMatrix2 = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
+        rotationMatrix2 = Matrix.multiply([rotationMatrix, CG.mat3x3Rotate(new Matrix(3, 3), theta2), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
+        let rotationMatrix3 = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
+        rotationMatrix3 = Matrix.multiply([rotationMatrix, CG.mat3x3Rotate(new Matrix(3, 3), theta3), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
+
+        this.models.slide1[0].transform = Matrix.multiply([translationMatrix, rotationMatrix]);
+        this.models.slide1[1].transform = Matrix.multiply([translationMatrix2, rotationMatrix2]);
+        this.models.slide1[2].transform = Matrix.multiply([translationMatrix3, rotationMatrix3]);
+
+        // Slide 2
+        let maxSize = 30;
+        let minSize = 10;
+        let scaleFactor = Math.sin(time / 1000);
+        let size = (maxSize - minSize) / 10 * scaleFactor;
+
+        let slide2_xDisplacement = 200;
+        let slide2_yDisplacement = 200;
+
+        let slide2_translate = CG.mat3x3Translate(new Matrix(3, 3), slide2_xDisplacement, slide2_yDisplacement);
+        let slide2_scale = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
+        slide2_scale = Matrix.multiply([slide2_scale, CG.mat3x3Scale(new Matrix(3, 3), size, size), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
+
+        this.models.slide2[0].transform = Matrix.multiply([slide2_translate, slide2_scale]);
+
+        let maxSize2 = 20;
+        let minSize2 = 5;
+        let scaleX = 3;
+        let scaleY = 0.25;
+        let sizeX = (maxSize2 - minSize2) / 10 * scaleFactor * scaleX;
+        let sizeY = (maxSize2 - minSize2) / 10 * scaleFactor * scaleY;
+
+        let slide2_xDisplacement2 = 500;
+        let slide2_yDisplacement2 = 400;
+
+        let slide2_translate2 = CG.mat3x3Translate(new Matrix(3, 3), slide2_xDisplacement2, slide2_yDisplacement2);
+        let slide2_scale2 = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
+        slide2_scale2 = Matrix.multiply([slide2_scale2, CG.mat3x3Scale(new Matrix(3, 3), sizeX, sizeY), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
+
+        this.models.slide2[1].transform = Matrix.multiply([slide2_translate2, slide2_scale2]);
     }
     
     //
@@ -169,7 +280,30 @@ class Renderer {
     drawSlide1() {
         // TODO: draw at least 3 polygons that spin about their own centers
         //   - have each polygon spin at a different speed / direction
-        
+
+        let teal = [0, 128, 128, 255];
+        let vertices = [];
+        for (let i=0; i < this.models.slide1[0].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide1[0].transform, this.models.slide1[0].vertices[i]]);
+            vertices.push(vertex);
+        }
+        this.drawConvexPolygon(vertices, teal);
+
+        let red = [255, 0, 0, 255];
+        let vertices2 = [];
+        for (let i=0; i < this.models.slide1[1].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide1[1].transform, this.models.slide1[1].vertices[i]]);
+            vertices2.push(vertex);
+        }
+        this.drawConvexPolygon(vertices2, red);
+
+        let blue = [0, 0, 255, 255];
+        let vertices3 = [];
+        for (let i=0; i < this.models.slide1[2].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide1[2].transform, this.models.slide1[2].vertices[i]]);
+            vertices3.push(vertex);
+        }
+        this.drawConvexPolygon(vertices3, blue);
         
     }
 
@@ -179,7 +313,21 @@ class Renderer {
         //   - have each polygon grow / shrink different sizes
         //   - try at least 1 polygon that grows / shrinks non-uniformly in the x and y directions
 
+        let teal = [0, 128, 128, 255];
+        let vertices = [];
+        for (let i=0; i < this.models.slide2[0].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide2[0].transform, this.models.slide2[0].vertices[i]]);
+            vertices.push(vertex);
+        }
+        this.drawConvexPolygon(vertices, teal);
 
+        let red = [255, 0, 0, 255];
+        let vertices2 = [];
+        for (let i=0; i < this.models.slide2[1].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide2[1].transform, this.models.slide2[1].vertices[i]]);
+            vertices2.push(vertex);
+        }
+        this.drawConvexPolygon(vertices2, red);
     }
 
     //
