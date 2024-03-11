@@ -21,11 +21,17 @@ class Renderer {
                 // example model (diamond) -> should be replaced with actual model
                 {
                     vertices: [
-                        CG.Vector3(400, 150, 1),
-                        CG.Vector3(500, 300, 1),
-                        CG.Vector3(400, 450, 1),
-                        CG.Vector3(300, 300, 1)
+                        // CG.Vector3(400, 150, 1),
+                        // CG.Vector3(500, 300, 1),
+                        // CG.Vector3(400, 450, 1),
+                        // CG.Vector3(300, 300, 1)
+                        // CG.Vector3(400, 450, 1),
+
                     ],
+                    xDisplacement: null,
+                    yDisplacement: null,
+                    vX: .09,
+                    vY: .05,
                     transform: null
                 }
             ],
@@ -33,6 +39,17 @@ class Renderer {
             slide2: [],
             slide3: []
         };
+        const centerX = 400; // X-coordinate of the center
+        const centerY = 300; // Y-coordinate of the center
+        const radius = 50; // Radius of the circle
+        const numVertices = 20; // Number of vertices
+
+        for (let i = 0; i < numVertices; i++) {
+            const angle = (i / numVertices) * Math.PI * 2; // Calculate angle
+            const x = centerX + Math.cos(angle) * radius; // Calculate X-coordinate using cosine
+            const y = centerY + Math.sin(angle) * radius; // Calculate Y-coordinate using sine
+            this.models.slide0[0].vertices.push(CG.Vector3(x, y, 1)); // Add vertex to the array
+        }
     }
 
     // flag:  bool
@@ -87,17 +104,11 @@ class Renderer {
     //
     updateTransforms(time, delta_time) {
         // TODO: update any transformations needed for animation
-        let vX = 50;
-        let vY = 10;
-        
-        let xDisplacement = vX * time/1000;
-        let yDisplacement = vY * time/1000;
 
-        if (xDisplacement > this.canvas.width) {
-            xDisplacement = -1*xDisplacement;
-        }
+        this.models.slide0[0].xDisplacement = this.models.slide0[0].xDisplacement + this.models.slide0[0].vX * delta_time;
+        this.models.slide0[0].yDisplacement = this.models.slide0[0].yDisplacement + this.models.slide0[0].vY * delta_time;
 
-        this.models.slide0[0].transform = CG.mat3x3Translate(new Matrix(3, 3), xDisplacement, yDisplacement);
+        this.models.slide0[0].transform = CG.mat3x3Translate(new Matrix(3, 3), this.models.slide0[0].xDisplacement, this.models.slide0[0].yDisplacement);
 
     }
     
@@ -133,6 +144,23 @@ class Renderer {
         for (let i=0; i < this.models.slide0[0].vertices.length; i++) {
             let vertex = Matrix.multiply([this.models.slide0[0].transform, this.models.slide0[0].vertices[i]]);
             vertices.push(vertex);
+
+            console.log(vertex.data[0]);
+            // if (vertex.data[0] > this.canvas.width) {
+            //     this.models.slide0[0].vX = -this.models.slide0[0].vX;
+            // } else if(vertex.data[1] > this.canvas.height) {
+            //     this.models.slide0[0].vY = -this.models.slide0[0].vY;
+            // } else if(vertex.data[0] < 0) {
+            //     this.models.slide0[0].vX = -this.models.slide0[0].vX;
+            // } else if(vertex.data[1] < 0) {
+            //     this.models.slide0[0].vY = -this.models.slide0[0].vY;
+            // }
+            if (vertex.data[0] > this.canvas.width || vertex.data[0] < 0) {
+                this.models.slide0[0].vX = -this.models.slide0[0].vX;
+            }
+            if (vertex.data[1] > this.canvas.height || vertex.data[1] < 0) {
+                this.models.slide0[0].vY = -this.models.slide0[0].vY;
+            }
         }
         this.drawConvexPolygon(vertices, teal);
     }
