@@ -67,6 +67,15 @@ class Renderer {
                         CG.Vector3(-50, -50, 1)
                     ],
                     transform: null
+                },
+                {
+                    vertices: [
+                        CG.Vector3(-50, 50, 1),
+                        CG.Vector3(50, 50, 1),
+                        CG.Vector3(50, -50, 1),
+                        CG.Vector3(-50, -50, 1)
+                    ],
+                    transform: null
                 }
             ],
             slide3: []
@@ -185,6 +194,22 @@ class Renderer {
         slide2_scale = Matrix.multiply([slide2_scale, CG.mat3x3Scale(new Matrix(3, 3), size, size), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
 
         this.models.slide2[0].transform = Matrix.multiply([slide2_translate, slide2_scale]);
+
+        let maxSize2 = 20;
+        let minSize2 = 5;
+        let scaleX = 3;
+        let scaleY = 0.25;
+        let sizeX = (maxSize2 - minSize2) / 10 * scaleFactor * scaleX;
+        let sizeY = (maxSize2 - minSize2) / 10 * scaleFactor * scaleY;
+
+        let slide2_xDisplacement2 = 500;
+        let slide2_yDisplacement2 = 400;
+
+        let slide2_translate2 = CG.mat3x3Translate(new Matrix(3, 3), slide2_xDisplacement2, slide2_yDisplacement2);
+        let slide2_scale2 = CG.mat3x3Translate(new Matrix(3, 3), -centerX, -centerY);
+        slide2_scale2 = Matrix.multiply([slide2_scale2, CG.mat3x3Scale(new Matrix(3, 3), sizeX, sizeY), CG.mat3x3Translate(new Matrix(3, 3), centerX, centerY)]);
+
+        this.models.slide2[1].transform = Matrix.multiply([slide2_translate2, slide2_scale2]);
     }
     
     //
@@ -268,7 +293,13 @@ class Renderer {
         }
         this.drawConvexPolygon(vertices, teal);
 
-
+        let red = [255, 0, 0, 255];
+        let vertices2 = [];
+        for (let i=0; i < this.models.slide2[1].vertices.length; i++) {
+            let vertex = Matrix.multiply([this.models.slide2[1].transform, this.models.slide2[1].vertices[i]]);
+            vertices2.push(vertex);
+        }
+        this.drawConvexPolygon(vertices2, red);
     }
 
     //
