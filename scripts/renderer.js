@@ -125,23 +125,23 @@ class Renderer {
             
             ]
         };
-        const centerX = 400; // X-coordinate of the center
-        const centerY = 300; // Y-coordinate of the center
-        const radius = 50; // Radius of the circle
-        const numVertices = 20; // Number of vertices
+        const centerX = 400; 
+        const centerY = 300;
+        const radius = 50; 
+        const numVertices = 100;
 
         for (let i = 0; i < numVertices; i++) {
-            const angle = (i / numVertices) * Math.PI * 2; // Calculate angle
-            const x = centerX + Math.cos(angle) * radius; // Calculate X-coordinate using cosine
-            const y = centerY + Math.sin(angle) * radius; // Calculate Y-coordinate using sine
-            this.models.slide0[0].vertices.push(CG.Vector3(x, y, 1)); // Add vertex to the array
+            const angle = (i / numVertices) * Math.PI * 2; 
+            const x = centerX + Math.cos(angle) * radius; 
+            const y = centerY + Math.sin(angle) * radius;
+            this.models.slide0[0].vertices.push(CG.Vector3(x, y, 1));
         }
 
         for (let i = 0; i < numVertices; i++) {
-            const angle = (i / numVertices) * Math.PI * 2; // Calculate angle
-            const x = centerX + Math.cos(angle) * radius; // Calculate X-coordinate using cosine
-            const y = centerY + Math.sin(angle) * radius; // Calculate Y-coordinate using sine
-            this.models.slide3[0].vertices.push(CG.Vector3(x, y, 1)); // Add vertex to the array
+            const angle = (i / numVertices) * Math.PI * 2; 
+            const x = centerX + Math.cos(angle) * radius;
+            const y = centerY + Math.sin(angle) * radius;
+            this.models.slide3[0].vertices.push(CG.Vector3(x, y, 1));
         }
     }
 
@@ -180,7 +180,6 @@ class Renderer {
         }
         let time = timestamp - this.start_time;
         let delta_time = timestamp - this.prev_time;
-        //console.log('animate(): t = ' + time.toFixed(1) + ', dt = ' + delta_time.toFixed(1));
 
         // Update transforms for animation
         this.updateTransforms(time, delta_time);
